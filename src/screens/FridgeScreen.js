@@ -55,3 +55,5 @@ const styles = StyleSheet.create({
     padding: 10, fontSize: 16, borderBottomWidth: 1, borderColor: '#eee'
   }
 });
+
+// TODO: 카테고리별 재료 분류 기능 추가 예정
