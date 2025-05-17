@@ -7,8 +7,12 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 export default function SignUpScreen() {
+  const navigation = useNavigation();
+
   const [id, setId] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -63,10 +67,21 @@ export default function SignUpScreen() {
     setIsValid(valid);
   }, [id, email, password, confirm]);
 
-  const onSignUp = () => {
+  const onSignUp = async () => {
     if (!isValid) return;
-    Alert.alert('회원가입 시도', `아이디: ${id}\n이메일: ${email}`);
-    // TODO: 백엔드 연동 시 이곳에 API 호출
+
+    try {
+      // TODO: 백엔드 연동 시 여기에 API 호출 추가
+
+      // 사용자 정보 저장
+      await AsyncStorage.setItem('userId', id);
+      await AsyncStorage.setItem('userEmail', email);
+
+      Alert.alert('회원가입 완료', '환영합니다!');
+      navigation.navigate('Welcome'); // 이후 이름 입력 화면으로 이동
+    } catch (error) {
+      Alert.alert('오류', '회원가입 중 문제가 발생했습니다.');
+    }
   };
 
   return (
