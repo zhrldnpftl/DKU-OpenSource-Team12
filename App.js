@@ -12,6 +12,7 @@ import ChangePasswordScreen from './src/screens/ChangePasswordScreen';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import NameInputScreen from './src/screens/NameInputScreen';
 import SavedRecipesScreen from './src/screens/SavedRecipesScreen';
+import ChatbotScreen from './src/screens/ChatbotScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,7 @@ export default function App() {
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="NameInput" component={NameInputScreen} />
         <Stack.Screen name="Favorites" component={SavedRecipesScreen} />
+        <Stack.Screen name="Chatbot" component={ChatbotScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

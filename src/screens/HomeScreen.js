@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 export default function HomeScreen({ navigation }) {
   const menuItems = [
     { icon: '🥕', label: '나의 냉장고', screen: 'Fridge' },
-    { icon: '🍽', label: '레시피 추천', screen: 'Recommend' },
+    { icon: '🍽', label: '레시피 추천', screen: 'Chatbot' },
     { icon: '⭐', label: '저장된 레시피', screen: 'Favorites' },
     { icon: '⚙️', label: '계정 설정', screen: 'Settings' },
   ];
