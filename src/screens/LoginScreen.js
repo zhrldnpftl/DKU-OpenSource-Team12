@@ -8,6 +8,9 @@ import {
   Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import HeaderBar from '../components/HeaderBar';
+
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -48,10 +51,72 @@ export default function LoginScreen() {
     validate();
   }, [id, password]);
 
-  const onLoginPress = () => {
+  // [0520 코드 수정]
+  // ✅ 로그인 시도
+  const onLoginPress = async () => {
     if (!isValid) return;
-    navigation.navigate('Home');
+
+    try {
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: id,
+          password: password,
+        }),
+      });
+
+      const result = await response.json();
+      console.log('0. ✅ 로그인 응답:', result);
+
+      if (response.status === 404) {
+        setIdError(result.error);
+        return;
+      }
+      if (response.status === 401) {
+        setPasswordError(result.error);
+        return;
+      }
+      if (!response.ok) {
+        Alert.alert('로그인 실패', result.error || '문제가 발생했습니다.');
+        return;
+      }
+
+      // 🔒 값 확인 및 방어 처리
+      const { user_id, email, username } = result;
+
+      if (!user_id || !email || !username) {
+        console.log('❌ 필수 값 누락:', result);
+        Alert.alert('서버 오류', '응답 정보가 부족합니다.');
+        return;
+      }
+
+      // ✅ 저장 안전하게 진행
+      try {
+        await AsyncStorage.setItem('userId', user_id.toString());
+        console.log('2. ✅ userId 저장');
+        await AsyncStorage.setItem('userEmail', email.toString());
+        console.log('3. ✅ email 저장');
+        await AsyncStorage.setItem('userName', username.toString());
+        console.log('4. ✅ username 저장');
+      } catch (e) {
+        console.log('❌ AsyncStorage 저장 실패:', e);
+        Alert.alert('저장 실패', '로컬 저장 중 문제가 발생했습니다.');
+        return;
+      }
+
+      // ✅ 홈 화면 이동
+      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+      console.log('5. ✅ Home으로 이동');
+
+    } catch (error) {
+      Alert.alert('서버 오류', '연결에 실패했습니다.');
+      console.log('❌ 서버 통신 오류:', error);
+    }
   };
+
+
+
 
   const onFindAccount = () => {
     navigation.navigate('FindAccount');
@@ -63,7 +128,7 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.logo}>ByteBite</Text>
+      <HeaderBar /> 
 
       <Text style={styles.label}>아이디</Text>
       <TextInput

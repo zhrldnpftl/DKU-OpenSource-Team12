@@ -14,13 +14,15 @@ import NameInputScreen from './src/screens/NameInputScreen';
 import SavedRecipesScreen from './src/screens/SavedRecipesScreen';
 import ChatbotScreen from './src/screens/ChatbotScreen';
 
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="Home"
+
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Login" component={LoginScreen} />
@@ -34,6 +36,7 @@ export default function App() {
         <Stack.Screen name="NameInput" component={NameInputScreen} />
         <Stack.Screen name="Favorites" component={SavedRecipesScreen} />
         <Stack.Screen name="Chatbot" component={ChatbotScreen} />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

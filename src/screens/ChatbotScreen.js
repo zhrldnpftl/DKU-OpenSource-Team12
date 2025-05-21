@@ -9,6 +9,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import HeaderBar from '../components/HeaderBar';
+import FooterBar from '../components/FooterBar';
 
 export default function ChatbotScreen() {
   const [messages, setMessages] = useState([

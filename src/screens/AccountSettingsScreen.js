@@ -8,13 +8,29 @@ import {
   Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native'; // ✅ route 추가
+import HeaderBar from '../components/HeaderBar';
+import FooterBar from '../components/FooterBar';
 
 export default function AccountSettingsScreen() {
   const navigation = useNavigation();
+  const route = useRoute(); // ✅ 현재 route 접근
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [editingName, setEditingName] = useState(false); // 수정 모드 여부
+  const [editingName, setEditingName] = useState(false);
+  const [showPasswordSuccess, setShowPasswordSuccess] = useState(false); // ✅ 메시지 상태 추가
+
+  // ✅ 비밀번호 변경 성공 메시지 처리
+  useEffect(() => {
+    console.log('[🔍 route.params]', route.params);  // 여기에 진입하는지 확인
+    if (route.params?.passwordChanged) {
+      console.log('[✅ passwordChanged true]'); // 로그 찍힘 확인
+      setShowPasswordSuccess(true);
+      setTimeout(() => setShowPasswordSuccess(false), 3000);
+    }
+  }, [route]);
+
+
 
   useEffect(() => {
     const loadUserInfo = async () => {
@@ -27,15 +43,36 @@ export default function AccountSettingsScreen() {
   }, []);
 
   const onSaveName = async () => {
-    await AsyncStorage.setItem('userName', username);
-    setEditingName(false);
-    Alert.alert('저장 완료', '사용자 이름이 변경되었습니다.');
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+
+      const response = await fetch('http://localhost:5000/update-username', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: userId,
+          username: username,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        await AsyncStorage.setItem('userName', username);
+        setEditingName(false);
+        Alert.alert('저장 완료', '사용자 이름이 변경되었습니다.');
+      } else {
+        Alert.alert('오류', result.error || '변경에 실패했습니다.');
+      }
+    } catch (error) {
+      Alert.alert('서버 오류', '이름 변경 중 문제가 발생했습니다.');
+    }
   };
 
   const onLogout = async () => {
     try {
-      await AsyncStorage.multiRemove(['userToken', 'userName', 'userEmail']);
-      navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+      await AsyncStorage.multiRemove(['userId', 'userName', 'userEmail']);
+      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
     } catch {
       Alert.alert('오류', '로그아웃 중 문제가 발생했습니다.');
     }
@@ -43,7 +80,16 @@ export default function AccountSettingsScreen() {
 
   return (
     <View style={styles.container}>
+      <HeaderBar />
+
       <Text style={styles.title}>계정 설정</Text>
+
+      {/* ✅ 비밀번호 변경 성공 메시지 */}
+      {showPasswordSuccess && (
+        <View style={styles.successBox}>
+          <Text style={styles.successText}>✅ 비밀번호가 성공적으로 변경되었습니다.</Text>
+        </View>
+      )}
 
       {/* 사용자 이름 */}
       <Text style={styles.label}>사용자 이름</Text>
@@ -70,11 +116,11 @@ export default function AccountSettingsScreen() {
         )}
       </View>
 
-      {/* 이메일 (수정불가) */}
+      {/* 이메일 */}
       <Text style={styles.label}>이메일</Text>
       <Text style={styles.value}>{email || '이메일 없음'}</Text>
 
-      {/* 버튼들 */}
+      {/* 버튼 */}
       <TouchableOpacity
         style={[styles.button, { backgroundColor: '#1976D2' }]}
         onPress={() => navigation.navigate('ChangePassword')}
@@ -124,5 +170,18 @@ const styles = StyleSheet.create({
   buttonText: { color: '#fff', fontWeight: '700', fontSize: 16 },
   logoutButton: { backgroundColor: '#e53935', marginTop: 15 },
   logoutButtonText: { color: '#fff', fontWeight: '700', fontSize: 16 },
-});
 
+  successBox: {
+    backgroundColor: '#e6ffed',
+    borderColor: '#3c763d',
+    borderWidth: 1,
+    padding: 12,
+    borderRadius: 6,
+    marginBottom: 15,
+  },
+  successText: {
+    color: '#3c763d',
+    textAlign: 'center',
+    fontWeight: '600',
+  },
+});

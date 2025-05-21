@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import HeaderBar from '../components/HeaderBar';
+import FooterBar from '../components/FooterBar';
 
 export default function SavedRecipesScreen() {
   const [search, setSearch] = useState('');
@@ -22,6 +24,8 @@ export default function SavedRecipesScreen() {
 
   return (
     <View style={styles.container}>
+      <HeaderBar /> 
+
       <Text style={styles.title}>⭐ 저장된 레시피</Text>
 
       <TextInput
@@ -47,6 +51,7 @@ export default function SavedRecipesScreen() {
           )}
         />
       )}
+      <FooterBar />
     </View>
   );
 }
@@ -56,7 +61,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginTop: 50,
+    marginTop: 10,
     marginBottom: 16,
     textAlign: 'center',
     color: '#9ae87f',
