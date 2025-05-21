@@ -291,5 +291,3 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
 });
-
-// TODO: 카테고리별 재료 분류 기능 추가 예정
