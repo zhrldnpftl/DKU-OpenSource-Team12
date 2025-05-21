@@ -1,0 +1,22 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - 안녕
+    - 안녕하세요
+    - 하이
+    - 좋은 아침
+
+- intent: goodbye
+  examples: |
+    - 안녕히 계세요
+    - 잘 가요
+    - 바이
+
+- intent: recommend_menu
+  examples: |
+    - 점심 뭐 먹지?
+    - 오늘 저녁 뭐야
+    - 메뉴 추천해줘
+    - 뭐 먹을까?
