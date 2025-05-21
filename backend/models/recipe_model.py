@@ -1,0 +1,1 @@
+# recipe_model.py : 저장된 레시피 관리

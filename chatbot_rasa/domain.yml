@@ -1,0 +1,23 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - recommend_menu
+
+responses:
+  utter_greet:
+  - text: "안녕하세요!"
+
+  utter_goodbye:
+  - text: "안녕히 가세요!"
+
+  utter_recommend_menu:
+  - text: "이거 어때요?"
+
+actions:
+  - action_recommend_menu
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
