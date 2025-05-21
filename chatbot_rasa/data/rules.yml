@@ -1,0 +1,13 @@
+version: "3.1"
+
+rules:
+
+- rule: 사용자가 작별인사 하면 언제든 인사하라
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: 사용자가 원하면 메뉴를 추천하라
+  steps:
+  - intent: recommend_menu
+  - action: action_recommend_menu
