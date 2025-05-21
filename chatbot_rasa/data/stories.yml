@@ -1,0 +1,21 @@
+version: "3.1"
+
+stories:
+
+- story: 인사
+  steps:
+  - intent: greet
+  - action: utter_greet
+
+- story: 인사 후 작별
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: 메뉴 추천
+  steps:
+  - intent: recommend_menu
+  - action: action_recommend_menu
+  
