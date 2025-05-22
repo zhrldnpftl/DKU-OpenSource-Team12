@@ -1,5 +1,7 @@
 # backend/db/import_recipes.py
 
+# TB_RECIPE_SEARCH_241226.csv의 내용을 recipes_dataset에 삽입하는 코드드
+
 import pandas as pd
 import sqlite3
 import os
