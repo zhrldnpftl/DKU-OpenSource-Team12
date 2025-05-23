@@ -5,6 +5,16 @@ intents:
   - goodbye
   - recommend_menu
 
+entities:
+  - ingredient
+
+slots:
+  ingredient:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: ingredient
+
 responses:
   utter_greet:
   - text: "안녕하세요!"
@@ -14,6 +24,9 @@ responses:
 
   utter_recommend_menu:
   - text: "이거 어때요?"
+
+  utter_ask_ingredient:
+    - text: 어떤 재료가 들어간 요리를 찾고 계신가요?
 
 actions:
   - action_recommend_menu

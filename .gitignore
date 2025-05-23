@@ -35,3 +35,6 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# 가상환경
+rasaenv/
