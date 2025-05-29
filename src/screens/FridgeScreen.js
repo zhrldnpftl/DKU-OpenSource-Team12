@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, Button, FlatList, StyleSheet, TouchableOpacity
 } from 'react-native';
-import { useForm, Controller } from 'react-hook-form';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFridgeStore } from '../stores/fridgeStore';
-import HeaderBar from '../components/HeaderBar';
-import FooterBar from '../components/FooterBar';
+import { useForm, Controller } from 'react-hook-form';                  // 🧩 입력 폼 관리 라이브러리
+import AsyncStorage from '@react-native-async-storage/async-storage';   // 🔐 로컬 스토리지 사용
+import { useFridgeStore } from '../stores/fridgeStore';                 // 📦 글로벌 상태관리 (Zustand)
+import HeaderBar from '../components/HeaderBar';                        // 📌 상단 헤더
+import FooterBar from '../components/FooterBar';                        // 📌 하단 푸터
 
 export default function FridgeScreen() {
   // ✅ 글로벌 상태관리 (zustand)로부터 재료 추가 함수 호출
@@ -30,8 +30,8 @@ export default function FridgeScreen() {
   // ✅ 메시지를 3초 뒤 자동 숨김
   useEffect(() => {
     if (message) {
-      const timer = setTimeout(() => setMessage(''), 3000);
-      return () => clearTimeout(timer);
+      const timer = setTimeout(() => setMessage(''), 3000); // 3초 뒤 초기화
+      return () => clearTimeout(timer);                     // 컴포넌트 언마운트 시 타이머 제거
     }
   }, [message]);
 
@@ -39,18 +39,19 @@ export default function FridgeScreen() {
   useEffect(() => {
     const fetchFridgeItems = async () => {
       try {
-        const userId = await AsyncStorage.getItem('userId');
-        const response = await fetch(`http://localhost:5000/fridge/list/${userId}`);
+        const userId = await AsyncStorage.getItem('userId');                          // 🔐 현재 사용자 ID 불러오기
+        const response = await fetch(`http://localhost:5000/fridge/list/${userId}`);  // 🔁 DB에서 재료 목록 요청
         const result = await response.json();
 
         if (response.ok) {
+          // 📂 응답에서 재료/조미료 분리하여 상태 저장
           const ingredients = result.items.filter(item => !item.is_seasoning).map(item => item.item_name);
           const seasonings = result.items.filter(item => item.is_seasoning).map(item => item.item_name);
           setIngredientItems(ingredients);
           setSeasoningItems(seasonings);
         }
       } catch (error) {
-        console.error('서버 오류:', error);
+        console.error('서버 오류:', error);     // ❌ 네트워크 오류 로그
       }
     };
     fetchFridgeItems();
@@ -58,12 +59,14 @@ export default function FridgeScreen() {
 
   // ✅ 재료 추가 버튼 클릭 시 호출
   const onSubmit = async ({ ingredient }) => {
+    // ❌ 빈 값 예외처리
     if (!ingredient) return;
 
+    // 현재 토글 상태 확인
     const isSeasoning = type === 'seasoning';
 
     try {
-      const userId = await AsyncStorage.getItem('userId');
+      const userId = await AsyncStorage.getItem('userId');                  // 🔐 사용자 ID
       const response = await fetch('http://localhost:5000/fridge/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -77,32 +80,31 @@ export default function FridgeScreen() {
       const result = await response.json();
 
       if (response.status === 409) {
-        setMessage(result.error); // 중복일 경우
+        setMessage(result.error);                                 // ⚠️ 중복 메시지
         setMessageType('error');
       } else if (response.ok) {
-        // 성공 시 글로벌 상태에도 추가
-        addIngredient(ingredient);
+        addIngredient(ingredient);                                // ✅ 글로벌 상태 추가
         isSeasoning
-          ? setSeasoningItems(prev => [...prev, ingredient])
-          : setIngredientItems(prev => [...prev, ingredient]);
-        setMessage(result.message);
+          ? setSeasoningItems(prev => [...prev, ingredient])      // 조미료 리스트에 추가
+          : setIngredientItems(prev => [...prev, ingredient]);    // 일반 재료에 추가
+        setMessage(result.message);                               // ✅ 성공 메시지
         setMessageType('success');
       } else {
-        setMessage('문제가 발생했습니다.');
+        setMessage('문제가 발생했습니다.');                       // ❌ 기타 서버 오류
         setMessageType('error');
       }
     } catch (error) {
-      setMessage('서버 오류가 발생했습니다.');
+      setMessage('서버 오류가 발생했습니다.');                    // ❌ 네트워크 오류
       setMessageType('error');
     }
 
-    reset({ ingredient: '' }); // 입력창 초기화
+    reset({ ingredient: '' });                                    // 입력 필드 초기화
   };
 
   // ✅ 재료 삭제 버튼 클릭 시 호출
   const handleDelete = async (item, isSeasoning) => {
     try {
-      const userId = await AsyncStorage.getItem('userId');
+      const userId = await AsyncStorage.getItem('userId');        // 🔐 사용자 ID
       const response = await fetch('http://localhost:5000/fridge/delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -116,21 +118,23 @@ export default function FridgeScreen() {
       const result = await response.json();
 
       if (response.ok) {
-        setMessage(result.message);
+        setMessage(result.message);                               // ✅ 삭제 성공 메시지
         setMessageType('success');
+
+        // ✅ 상태 업데이트: 해당 항목 제거
         isSeasoning
           ? setSeasoningItems(prev => prev.filter(i => i !== item))
           : setIngredientItems(prev => prev.filter(i => i !== item));
       } else {
-        setMessage(result.error || '삭제 실패');
+        setMessage(result.error || '삭제 실패');                 // ❌ 삭제 실패
         setMessageType('error');
       }
     } catch (error) {
-      setMessage('삭제 중 오류 발생');
+      setMessage('삭제 중 오류 발생');                            // ❌ 네트워크 오류
       setMessageType('error');
     }
 
-    reset({ ingredient: '' });
+    reset({ ingredient: '' });                                    // 입력창 초기화
   };
 
   return (
@@ -145,7 +149,7 @@ export default function FridgeScreen() {
         </Text>
       )}
 
-      {/* ✅ 재료 / 조미료 토글 버튼 */}
+      {/* ✅ 토글 버튼: 재료/조미료 선택 */}
       <View style={styles.toggleRow}>
         <TouchableOpacity
           style={[styles.toggleButton, type === 'ingredient' && styles.toggleSelected]}
@@ -181,6 +185,7 @@ export default function FridgeScreen() {
 
       {/* ✅ 재료/조미료 리스트 */}
       <View style={styles.gridContainer}>
+        {/* ▶ 일반 재료 리스트 */}
         <View style={styles.gridColumn}>
           <Text style={styles.gridTitle}>🥬 재료</Text>
           {ingredientItems.map((item, index) => (
@@ -192,7 +197,8 @@ export default function FridgeScreen() {
             </View>
           ))}
         </View>
-
+        
+        {/* ▶ 조미료 리스트 */}
         <View style={styles.gridColumn}>
           <Text style={styles.gridTitle}>🧂 조미료</Text>
           {seasoningItems.map((item, index) => (
