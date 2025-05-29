@@ -4,18 +4,20 @@ import { useNavigation } from '@react-navigation/native';
 import HeaderBar from '../components/HeaderBar';
 import FooterBar from '../components/FooterBar';
 
+// 🧩 아이디/비밀번호 찾기 화면 컴포넌트 정의
 export default function FindAccountScreen() {
+  // 🔁 화면 이동을 위한 네비게이션 객체
   const navigation = useNavigation();
 
-  // ✅ 아이디 찾기용 이메일 상태값
-  const [email, setEmail] = useState('');
-  const [foundId, setFoundId] = useState('');
-  const [notFound, setNotFound] = useState(false); // 해당 이메일이 없을 경우 메시지 표시용
+  // ✅ 아이디 찾기 관련 상태
+  const [email, setEmail] = useState('');                 // 이메일 입력값
+  const [foundId, setFoundId] = useState('');             // 찾은 아이디
+  const [notFound, setNotFound] = useState(false);        // 아이디를 못 찾은 경우 표시용
 
-  // ✅ 비밀번호 재설정용 이메일 & 아이디 상태값
-  const [pwEmail, setPwEmail] = useState('');
-  const [pwUserId, setPwUserId] = useState('');
-  const [pwResetStatus, setPwResetStatus] = useState(""); // 메시지 상태
+  // ✅ 비밀번호 재설정 관련 상태
+  const [pwEmail, setPwEmail] = useState('');             // 이메일 입력값
+  const [pwUserId, setPwUserId] = useState('');           // 사용자 ID 입력값
+  const [pwResetStatus, setPwResetStatus] = useState(""); // 응답 메시지 상태
 
 
   // ✅ 로그인 화면으로 이동
@@ -24,26 +26,26 @@ export default function FindAccountScreen() {
   // ✅ 회원가입 화면으로 이동
   const goToSignUp = () => navigation.navigate('SignUp');
 
-  // ✅ 아이디 찾기 요청
+  // ✅ [1] 아이디 찾기 요청 처리
   const handleFindId = async () => {
     try {
       const response = await fetch(`http://localhost:5000/find-id/${email}`);
       const result = await response.json();
 
       if (!response.ok) {
-        setNotFound(true);   // ❌ 아이디를 못 찾은 경우
+        setNotFound(true);   // ❌ 실패 시 → 아이디 없음 처리
         setFoundId('');
         return;
       }
 
-      setFoundId(result.user_id); // ✅ 아이디 성공적으로 찾음
+      setFoundId(result.user_id); // ✅ 성공 시 → 아이디 저장
       setNotFound(false);
     } catch (error) {
-      Alert.alert('서버 오류', '서버에 연결할 수 없습니다.');
+      Alert.alert('서버 오류', '서버에 연결할 수 없습니다.');   // ⚠️ 네트워크 에러
     }
   };
 
-  // ✅ 비밀번호 재설정 로직
+  // ✅ [2] 비밀번호 재설정 요청 처리
   const handleResetPassword = async () => {
     if (!pwEmail || !pwUserId) {
       setPwResetStatus("⚠️ 이메일과 아이디를 모두 입력해주세요.");
@@ -63,6 +65,7 @@ export default function FindAccountScreen() {
       const result = await response.json();
       console.log("비밀번호 재설정 result: ", result);
 
+      // ❌ 다양한 실패 상황별 메시지 설정
       if (response.status === 404) {
         setPwResetStatus("해당 이메일로 가입된 정보가 없습니다.");
       } else if (response.status === 401) {
@@ -70,6 +73,7 @@ export default function FindAccountScreen() {
       } else if (!response.ok) {
         setPwResetStatus(result.error || "문제가 발생했습니다.");
       } else {
+        // ✅ 성공적으로 메일 전송 완료
         setPwResetStatus("✅ 임시 비밀번호가 이메일로 발송되었습니다.");
       }
     } catch (error) {
@@ -80,10 +84,11 @@ export default function FindAccountScreen() {
 
   return (
     <View style={styles.container}>
-      <HeaderBar />
+      <HeaderBar />           {/* 📌 상단 공통 헤더 */}
       {/* ✅ [1] 아이디 찾기 섹션 */}
       <Text style={styles.title}>아이디 찾기</Text>
 
+      {/* 이메일 입력 필드 */}
       <Text style={styles.label}>이메일</Text>
       <TextInput
         style={styles.input}
@@ -100,6 +105,7 @@ export default function FindAccountScreen() {
         </TouchableOpacity>
       ) : foundId !== '' ? (
         <>
+        {/* ✅ 아이디 찾기 성공 결과 */}
           <Text style={styles.resultText}>아이디 : {foundId}</Text>
           <TouchableOpacity style={styles.button} onPress={goToLogin}>
             <Text style={styles.buttonText}>로그인하러 가기</Text>
@@ -107,6 +113,7 @@ export default function FindAccountScreen() {
         </>
       ) : (
         <>
+        {/* ❌ 아이디 찾기 실패 결과 */}
           <Text style={styles.notFoundText}>해당 이메일로 가입된 정보가 없습니다.</Text>
           <TouchableOpacity style={styles.button} onPress={handleFindId}>
             <Text style={styles.buttonText}>아이디 찾기</Text>
@@ -117,12 +124,13 @@ export default function FindAccountScreen() {
         </>
       )}
 
-      {/* 🔻 구분선 */}
+      {/* 🔻 아이디 찾기와 비밀번호 재설정 구분선 */}
       <View style={styles.separator} />
 
-      {/* ✅ [2] 비밀번호 재설정 섹션 */}
+      {/* 🟢 비밀번호 재설정 섹션 */}
       <Text style={styles.title}>비밀번호 재설정</Text>
 
+      {/* 이메일 입력 */}
       <Text style={styles.label}>이메일</Text>
       <TextInput
         style={styles.input}
@@ -132,6 +140,7 @@ export default function FindAccountScreen() {
         onChangeText={setPwEmail}
       />
 
+      {/* 아이디 입력 */}
       <Text style={styles.label}>아이디</Text>
       <TextInput
         style={styles.input}
@@ -140,6 +149,7 @@ export default function FindAccountScreen() {
         onChangeText={setPwUserId}
       />
 
+      {/* 재설정 버튼 */}
       <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
         <Text style={styles.buttonText}>비밀번호 재설정 메일 보내기</Text>
       </TouchableOpacity>
@@ -164,7 +174,7 @@ export default function FindAccountScreen() {
           )}
         </>
       )}
-      <FooterBar />
+      <FooterBar />   {/* 📌 하단 공통 바 */}
     </View>
   );
 }
