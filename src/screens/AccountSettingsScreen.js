@@ -12,26 +12,28 @@ import { useNavigation, useRoute } from '@react-navigation/native'; // ✅ route
 import HeaderBar from '../components/HeaderBar';
 import FooterBar from '../components/FooterBar';
 
+// 🔧 계정 설정 화면 정의
 export default function AccountSettingsScreen() {
-  const navigation = useNavigation();
-  const route = useRoute(); // ✅ 현재 route 접근
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [editingName, setEditingName] = useState(false);
-  const [showPasswordSuccess, setShowPasswordSuccess] = useState(false); // ✅ 메시지 상태 추가
+  const navigation = useNavigation();                   // 🔁 화면 이동 객체
+  const route = useRoute();                             // ✅ 현재 route 정보 접근
 
-  // ✅ 비밀번호 변경 성공 메시지 처리
+  // 🔣 상태값 선언
+  const [username, setUsername] = useState('');                           // 사용자 이름
+  const [email, setEmail] = useState('');                                 // 이메일
+  const [editingName, setEditingName] = useState(false);                  // 이름 편집 모드 여부
+  const [showPasswordSuccess, setShowPasswordSuccess] = useState(false);  // 비밀번호 변경 성공 알림
+
+  // ✅ [1] 비밀번호 변경 성공 메시지 표시 (ChangePasswordScreen → 이 화면 복귀 시)
   useEffect(() => {
-    console.log('[🔍 route.params]', route.params);  // 여기에 진입하는지 확인
     if (route.params?.passwordChanged) {
-      console.log('[✅ passwordChanged true]'); // 로그 찍힘 확인
+      // ✅ 메시지 표시
       setShowPasswordSuccess(true);
+      // ⏱ 3초 후 자동 사라짐
       setTimeout(() => setShowPasswordSuccess(false), 3000);
     }
   }, [route]);
 
-
-
+  // ✅ [2] 로컬 저장소에서 사용자 정보 불러오기
   useEffect(() => {
     const loadUserInfo = async () => {
       const savedName = await AsyncStorage.getItem('userName');
@@ -39,9 +41,10 @@ export default function AccountSettingsScreen() {
       if (savedName) setUsername(savedName);
       if (savedEmail) setEmail(savedEmail);
     };
-    loadUserInfo();
+    loadUserInfo();       // 🔄 초기 로딩 시 실행
   }, []);
 
+  // ✅ [3] 사용자 이름 저장 요청
   const onSaveName = async () => {
     try {
       const userId = await AsyncStorage.getItem('userId');
@@ -58,8 +61,8 @@ export default function AccountSettingsScreen() {
       const result = await response.json();
 
       if (response.ok) {
-        await AsyncStorage.setItem('userName', username);
-        setEditingName(false);
+        await AsyncStorage.setItem('userName', username);         // 🧠 로컬에도 저장
+        setEditingName(false);                                    // ✏️ 편집모드 종료
         Alert.alert('저장 완료', '사용자 이름이 변경되었습니다.');
       } else {
         Alert.alert('오류', result.error || '변경에 실패했습니다.');
@@ -69,10 +72,11 @@ export default function AccountSettingsScreen() {
     }
   };
 
+  // ✅ [4] 로그아웃 처리
   const onLogout = async () => {
     try {
-      await AsyncStorage.multiRemove(['userId', 'userName', 'userEmail']);
-      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+      await AsyncStorage.multiRemove(['userId', 'userName', 'userEmail']);  // 🧹 로컬 데이터 삭제
+      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });           // 🏠 홈으로 이동
     } catch {
       Alert.alert('오류', '로그아웃 중 문제가 발생했습니다.');
     }
@@ -80,18 +84,18 @@ export default function AccountSettingsScreen() {
 
   return (
     <View style={styles.container}>
-      <HeaderBar />
+      <HeaderBar />     {/* 📌 공통 상단 헤더 */}
 
       <Text style={styles.title}>계정 설정</Text>
 
-      {/* ✅ 비밀번호 변경 성공 메시지 */}
+      {/* ✅ [1] 비밀번호 변경 성공 메시지 */}
       {showPasswordSuccess && (
         <View style={styles.successBox}>
           <Text style={styles.successText}>✅ 비밀번호가 성공적으로 변경되었습니다.</Text>
         </View>
       )}
 
-      {/* 사용자 이름 */}
+      {/* 🔧 사용자 이름 표시 및 편집 */}
       <Text style={styles.label}>사용자 이름</Text>
       <View style={styles.row}>
         {editingName ? (
@@ -116,11 +120,11 @@ export default function AccountSettingsScreen() {
         )}
       </View>
 
-      {/* 이메일 */}
+      {/* 📧 사용자 이메일 표시 (수정 불가) */}
       <Text style={styles.label}>이메일</Text>
       <Text style={styles.value}>{email || '이메일 없음'}</Text>
 
-      {/* 버튼 */}
+      {/* 🔐 비밀번호 변경 버튼 */}
       <TouchableOpacity
         style={[styles.button, { backgroundColor: '#1976D2' }]}
         onPress={() => navigation.navigate('ChangePassword')}
@@ -128,6 +132,7 @@ export default function AccountSettingsScreen() {
         <Text style={styles.buttonText}>비밀번호 변경</Text>
       </TouchableOpacity>
 
+      {/* 🔓 로그아웃 버튼 */}
       <TouchableOpacity
         style={[styles.button, styles.logoutButton]}
         onPress={onLogout}
