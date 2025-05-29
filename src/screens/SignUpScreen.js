@@ -1,3 +1,4 @@
+// 📦 필수 라이브러리 및 컴포넌트 임포트
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -8,28 +9,35 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import HeaderBar from '../components/HeaderBar';
+import HeaderBar from '../components/HeaderBar';  // 헤더 컴포넌트
 
+// 🧩 회원가입 화면 컴포넌트 시작
 export default function SignUpScreen() {
+  // 📍 페이지 이동 객체
   const navigation = useNavigation();
 
+  // 📋 입력 필드 상태 변수
   const [id, setId] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
 
+  // ⚠️ 에러 메시지 상태
   const [idError, setIdError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmError, setConfirmError] = useState('');
 
+  // ✅ 성공 메시지 상태 (중복 확인)
   const [idSuccess, setIdSuccess] = useState('');
   const [emailSuccess, setEmailSuccess] = useState('');
 
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState(false);  // 🔒 전체 유효성 여부
 
+  // 📧 이메일 유효성 검사 함수
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
+  // 🔍 입력 값이 바뀔 때마다 유효성 검사 수행
   useEffect(() => {
     let valid = true;
 
@@ -64,9 +72,10 @@ export default function SignUpScreen() {
       setConfirmError('');
     }
 
-    setIsValid(valid);
+    setIsValid(valid);  // 🔐 모든 필드 유효할 때만 true
   }, [id, email, password, confirm]);
 
+  // 🟦 아이디 중복 확인 요청 (Flask: `/check-id/<id>`)
   const checkDuplicateId = async () => {
     const res = await fetch(`http://localhost:5000/check-id/${id}`);
     const result = await res.json();
@@ -79,6 +88,7 @@ export default function SignUpScreen() {
     }
   };
 
+  // 🟦 이메일 중복 확인 요청 (Flask: `/check-email/<email>`)
   const checkDuplicateEmail = async () => {
     const res = await fetch(`http://localhost:5000/check-email/${email}`);
     const result = await res.json();
@@ -91,21 +101,24 @@ export default function SignUpScreen() {
     }
   };
 
+  // 🟨 회원가입 최종 요청 (POST `/signup`)
   const onSignUp = async () => {
-    if (!isValid) return;
+    if (!isValid) return;     // ❌ 유효성 실패 시 종료
     try {
       const response = await fetch('http://localhost:5000/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           user_id: id,
-          username: id,
+          username: id,   // 🧾 닉네임도 동일하게 사용
           email,
           password,
         }),
       });
 
       const result = await response.json();
+
+      // ⚠️ 중복 오류 처리
       if (response.status === 409) {
         if (result.error.includes('아이디')) setIdError(result.error);
         else if (result.error.includes('이메일')) setEmailError(result.error);
@@ -113,8 +126,11 @@ export default function SignUpScreen() {
       }
       if (!response.ok) return;
 
+      // 🧠 로컬 저장소에 로그인 정보 저장
       await AsyncStorage.setItem('userId', id);
       await AsyncStorage.setItem('userEmail', email);
+
+      // 🎉 회원가입 성공 후 Welcome 페이지로 이동
       navigation.navigate('Welcome');
     } catch (error) {
       console.log('회원가입 요청 실패:', error);
@@ -213,7 +229,7 @@ const styles = StyleSheet.create({
   smallButtonText: { color: '#fff', fontWeight: '700' },
   inputError: { borderColor: 'red' },
   errorText: { color: 'red', fontSize: 12, marginBottom: 10 },
-  successText: { color: 'blue', fontSize: 12, marginBottom: 10 }, // ✅ 파란 성공 메시지 스타일
+  successText: { color: 'blue', fontSize: 12, marginBottom: 10 }, 
   button: { backgroundColor: '#000', padding: 14, borderRadius: 4, alignItems: 'center', marginTop: 10 },
   buttonDisabled: { backgroundColor: '#999' },
   buttonText: { color: '#fff', fontWeight: '700', fontSize: 16 },
