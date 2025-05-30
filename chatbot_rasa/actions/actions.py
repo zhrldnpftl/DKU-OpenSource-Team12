@@ -5,6 +5,9 @@ import os
 import re
 import requests
 from bs4 import BeautifulSoup
+from konlpy.tag import Okt
+
+okt = Okt()
 
 # 1. 데이터셋 로딩 (환경에 맞게 경로 조정)
 dataset_path = os.path.join(os.path.dirname(__file__), '../..', 'backend', 'db', 'TB_RECIPE_SEARCH_241226.csv')
@@ -69,46 +72,53 @@ class ActionRecommendMenu(Action):
         return "action_recommend_menu"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain):
-        selected_ingredient = tracker.get_slot("ingredient")  # 사용자 입력 재료 예: "고구마"
+        user_message = tracker.latest_message.get('text')  # 전체 사용자 발화
+        candidate_ingredients = dataset["CKG_MTRL_CN"].dropna().str.extractall(r'([가-힣]+)')[0].unique()
 
-        if selected_ingredient:
-            # 재료가 포함된 레시피 필터링 (대소문자 무시)
-            matched_recipes = dataset[dataset["CKG_MTRL_CN"].str.contains(selected_ingredient, case=False, na=False)]
+        # 1. 사용자 발화에서 명사 추출
+        nouns = okt.nouns(user_message)
+        print(f"사용자 명사 추출: {nouns}")
+
+        # 2. 명사 중 데이터셋의 재료와 일치하는 것 찾기
+        matched_ingredient = None
+        for noun in nouns:
+            for known in candidate_ingredients:
+                if noun in known:
+                    matched_ingredient = noun
+                    break
+            if matched_ingredient:
+                break
+
+        # 3. 매칭된 재료로 레시피 검색
+        if matched_ingredient:
+            matched_recipes = dataset[dataset["CKG_MTRL_CN"].str.contains(matched_ingredient, case=False, na=False)]
             if matched_recipes.empty:
-                dispatcher.utter_message(text=f"{selected_ingredient}이(가) 들어간 레시피를 찾지 못했어요.")
+                dispatcher.utter_message(text=f"{matched_ingredient}이(가) 들어간 레시피를 찾지 못했어요.")
                 return []
-
-            # 매칭된 레시피 중 랜덤 선택
             recipe_row = matched_recipes.sample().iloc[0]
         else:
-            # 슬롯에 재료가 없으면 전체에서 랜덤 선택
-            recipe_row = dataset.sample().iloc[0]
+            dispatcher.utter_message(text="입력하신 재료를 이해하지 못했어요 😢 다시 한 번 말씀해 주세요.")
+            return []
 
         recipe_code = recipe_row["RCP_SNO"]
         recipe_title = recipe_row["CKG_NM"]
         raw_ingredients = recipe_row["CKG_MTRL_CN"]
 
         try:
-            # 조리법 크롤링
             steps, link = crawl_recipe(recipe_code)
-
-            # 재료 요약
             short_ingredients = parse_ingredients(raw_ingredients, max_items=5)
 
-            # 조리법 요약 (최대 5줄)
             steps_lines = steps.split('\n') if steps else []
             short_steps = '\n'.join(steps_lines[:5]) if steps_lines else "조리법 정보를 불러오지 못했어요 😢"
             if len(steps_lines) > 5:
                 short_steps += "\n\n... 자세한 조리법은 링크에서 확인하세요!"
 
             dispatcher.utter_message(
-                text=(
-                    f"🔎 이런 레시피는 어때요?\n\n"
-                    f"🍽️ 메뉴명: {recipe_title}\n\n"
-                    f"🧂 재료:\n{short_ingredients}\n\n"
-                    f"📝 조리법:\n{short_steps}\n\n"
-                    f"🔗 자세히 보기: {link}"
-                )
+                text=(f"🔎 이런 레시피는 어때요?\n\n"
+                      f"🍽️ 메뉴명: {recipe_title}\n\n"
+                      f"🧂 재료:\n{short_ingredients}\n\n"
+                      f"📝 조리법:\n{short_steps}\n\n"
+                      f"🔗 자세히 보기: {link}")
             )
 
         except Exception as e:
