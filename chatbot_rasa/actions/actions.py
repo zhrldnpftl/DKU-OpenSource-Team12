@@ -9,11 +9,11 @@ from konlpy.tag import Okt
 
 okt = Okt()
 
-# 1. 데이터셋 로딩 (환경에 맞게 경로 조정)
+# 데이터 로드
 dataset_path = os.path.join(os.path.dirname(__file__), '../..', 'backend', 'db', 'TB_RECIPE_SEARCH_241226.csv')
 dataset = pd.read_csv(dataset_path)
 
-# 2. 레시피 조리법 크롤링 함수
+# 조리법 크롤링
 def crawl_recipe(recipe_code):
     url = f"https://www.10000recipe.com/recipe/{recipe_code}"
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -36,17 +36,14 @@ def crawl_recipe(recipe_code):
 
     return step_text, url
 
-# 3. 재료 파싱 및 요약 함수
+# 재료 파싱
 def parse_ingredients(raw_str, max_items=5):
-    # 대괄호 태그 제거
     cleaned_str = re.sub(r'\[[^\]]*\]', '', raw_str)
-
-    # '|' 로 재료 분리
     items = cleaned_str.split('|')
     parsed_items = []
 
     for item in items:
-        parts = item.split('\a')  # BEL 문자 분리
+        parts = item.split('\a')
         name = parts[0].strip() if len(parts) > 0 else ''
         qty = parts[1].strip() if len(parts) > 1 else ''
         unit = parts[2].strip() if len(parts) > 2 else ''
@@ -66,40 +63,42 @@ def parse_ingredients(raw_str, max_items=5):
     else:
         return '\n'.join(parsed_items)
 
-# 4. Rasa 액션 클래스
+# 액션 클래스
 class ActionRecommendMenu(Action):
     def name(self):
         return "action_recommend_menu"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain):
-        user_message = tracker.latest_message.get('text')  # 전체 사용자 발화
+        user_message = tracker.latest_message.get('text')
         candidate_ingredients = dataset["CKG_MTRL_CN"].dropna().str.extractall(r'([가-힣]+)')[0].unique()
 
-        # 1. 사용자 발화에서 명사 추출
         nouns = okt.nouns(user_message)
         print(f"사용자 명사 추출: {nouns}")
 
-        # 2. 명사 중 데이터셋의 재료와 일치하는 것 찾기
-        matched_ingredient = None
+        matched_ingredients = []
         for noun in nouns:
             for known in candidate_ingredients:
                 if noun in known:
-                    matched_ingredient = noun
+                    matched_ingredients.append(noun)
                     break
-            if matched_ingredient:
-                break
 
-        # 3. 매칭된 재료로 레시피 검색
-        if matched_ingredient:
-            matched_recipes = dataset[dataset["CKG_MTRL_CN"].str.contains(matched_ingredient, case=False, na=False)]
-            if matched_recipes.empty:
-                dispatcher.utter_message(text=f"{matched_ingredient}이(가) 들어간 레시피를 찾지 못했어요.")
-                return []
-            recipe_row = matched_recipes.sample().iloc[0]
-        else:
+        if not matched_ingredients:
             dispatcher.utter_message(text="입력하신 재료를 이해하지 못했어요 😢 다시 한 번 말씀해 주세요.")
             return []
 
+        # AND 조건: 모든 재료가 포함된 레시피만 필터링
+        def contains_all_ingredients(recipe_ingredients, required_ingredients):
+            return all(ingredient in recipe_ingredients for ingredient in required_ingredients)
+
+        matched_recipes = dataset[dataset["CKG_MTRL_CN"].apply(
+            lambda x: contains_all_ingredients(str(x), matched_ingredients)
+        )]
+
+        if matched_recipes.empty:
+            dispatcher.utter_message(text=f"{', '.join(matched_ingredients)}이(가) 모두 들어간 레시피를 찾지 못했어요.")
+            return []
+
+        recipe_row = matched_recipes.sample().iloc[0]
         recipe_code = recipe_row["RCP_SNO"]
         recipe_title = recipe_row["CKG_NM"]
         raw_ingredients = recipe_row["CKG_MTRL_CN"]
