@@ -1,7 +1,6 @@
 version: "3.1"
 
 stories:
-
 - story: 인사
   steps:
   - intent: greet
@@ -14,8 +13,25 @@ stories:
   - intent: goodbye
   - action: utter_goodbye
 
-- story: 메뉴 추천
+- story: 메뉴 추천 (카테고리 있을 때)
   steps:
   - intent: recommend_menu
-  - action: action_recommend_menu
-  
+  - slot_was_set:
+    - category: 다이어트
+  - action: action_handle_recommend_menu
+
+- story: 메뉴 추천 (카테고리 없을 때)
+  steps:
+  - intent: recommend_menu
+  - slot_was_set:
+    - category: null
+  - action: utter_ask_category
+
+
+- story: user_id 등록
+  steps:
+  - intent: inform_user_id
+  - action: action_store_user_id
+  - slot_was_set:
+    - user_id
+  - action: utter_ask_ingredient
