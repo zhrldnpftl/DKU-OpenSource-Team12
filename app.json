@@ -7,8 +7,11 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+<<<<<<< HEAD
     // [0519 추가] pc web 환경설정
     "platforms": ["ios", "android", "web"],
+=======
+>>>>>>> b5cbc3f6b536ea898e1a51e6bfcc1b9cefb7b0f9
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
