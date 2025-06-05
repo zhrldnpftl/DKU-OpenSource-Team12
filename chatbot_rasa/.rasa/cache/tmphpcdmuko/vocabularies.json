@@ -1,0 +1,50 @@
+{
+  "text": {
+    "안녕": 9,
+    "안녕하세요": 10,
+    "하이": 18,
+    "좋은": 16,
+    "아침": 8,
+    "안녕히": 11,
+    "계세요": 1,
+    "잘": 13,
+    "가요": 0,
+    "바이": 7,
+    "점심": 15,
+    "뭐": 5,
+    "먹지": 3,
+    "오늘": 12,
+    "저녁": 14,
+    "뭐야": 6,
+    "메뉴": 4,
+    "추천해줘": 17,
+    "먹을까": 2
+  },
+  "intent": {
+    "greet": 2,
+    "goodbye": 1,
+    "recommend_menu": 3,
+    "bot_challenge": 0
+  },
+  "response": null,
+  "action_name": {
+    "action_listen": 6,
+    "action_restart": 7,
+    "action_session_start": 9,
+    "action_default_fallback": 4,
+    "action_deactivate_loop": 1,
+    "action_revert_fallback_events": 8,
+    "action_default_ask_affirmation": 2,
+    "action_default_ask_rephrase": 3,
+    "action_two_stage_fallback": 10,
+    "action_unlikely_intent": 11,
+    "action_back": 0,
+    "action_extract_slots": 5,
+    "utter_goodbye": 12,
+    "utter_greet": 13,
+    "utter_iamabot": 14,
+    "utter_recomend_menu": 15
+  },
+  "action_text": null,
+  "intent_response_key": null
+}

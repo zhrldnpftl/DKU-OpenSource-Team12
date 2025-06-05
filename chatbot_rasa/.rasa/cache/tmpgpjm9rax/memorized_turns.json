@@ -1,0 +1,20 @@
+{
+  "lookup": {
+    "eJyLrq6NBQAEOAGx": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEqhKDU5Pzc3NS8lHkiU1hJnWEZiXkpOajyaXoJmxwIAjZtC0Q==": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohvSg1taS2NhYA6dwbhQ==": "utter_greet",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohvSg1taSWgBmlJSWpRfEQpbhMiAUAQvc0lw==": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohvSg1taSWgBmlJSWpRfEQpeSZQMgV+fkpSZWptbWxAExvTz0=": "utter_goodbye",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohvSg1taSWgBmlJSWpRfEQpeSZQMgV+fkpSZWpRLoDqhi3KbEAotRp8w==": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEqhOCO/oCAzLz2+uDQ9PbUYpLa2NhYAl4khfQ==": "action_shopping_suggestion",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEqhOCO/oCAzLz2+uDQ9PbUYpLaWOBOx6STO+FgA4jtGyQ==": "action_listen",
+    "eJyFjNEJgDAMBVfJAE7QVURCqEGKNpU0FaR0dwP678/jHRw39zFBP5UvpGipSID+HhTKHOCDI1VjcbdVVneSOFoA5VhyZlnRp42fWDNjRao7RjLeit7/xeUBBDM+6g==": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEqhKDU5Pzc3NS8lPq0oPxdIZKakp9bWxgIA2AwiCw==": "action_recommend_from_fridge",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEqhKDU5Pzc3NS8lPq0oPxdIZKakp9YSZyZ2vcRaEQsAaO5Icw==": "action_listen",
+    "eJwtikEKwCAMBL/iA0ppr35FRERDCWgsGnsR/95ge1l2d8aMualxV3icD4yFtBpfceQzaPWPhI2BxG2pcBMJ6aoQEYi1Mud+WGG9QV2I110hlJyBopPoc9oXyDMo2Q==": "action_recommend_menu",
+    "eJylTUsKgCAQvYoHiKitVwkR0SEGdAwd24h3T6xVq6DN4315W22TqEeCUxvLGEmKehNNJoAUj/CYGah3s4+cewlpT+AQiKXY1nlRPSsZ0oh42AlsDAHI6Q6lfTt6jX4dqgs+9FNA": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohMy8tvyg3HiQan5lSWxsLAPPXH0M=": "action_store_user_id",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohMy8tvyg3HiQan5lSS5xhxSX5RalwPQTNjAUAhow/vQ==": "utter_ask_ingredient",
+    "eJyljEEKgDAMBL/SB/iCfkUkFI0StKmk0Uvp340oXhW87S6z05bauLIK7hB6pcTelSsAh4je3WWhrMjGbhnFGGKr6h3xmCTCuQIN9ZssaxJ8Pj+dm6pxIc9APAkOZI53Z3cAw2BgPQ==": "action_listen"
+  }
+}

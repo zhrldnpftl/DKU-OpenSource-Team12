@@ -1,0 +1,52 @@
+[
+  {
+    "tag_name": "entity",
+    "ids_to_tags": {
+      "1": "B-category",
+      "2": "I-category",
+      "3": "L-category",
+      "4": "U-category",
+      "5": "B-difficulty",
+      "6": "I-difficulty",
+      "7": "L-difficulty",
+      "8": "U-difficulty",
+      "9": "B-ingredient",
+      "10": "I-ingredient",
+      "11": "L-ingredient",
+      "12": "U-ingredient",
+      "13": "B-time",
+      "14": "I-time",
+      "15": "L-time",
+      "16": "U-time",
+      "17": "B-user_id",
+      "18": "I-user_id",
+      "19": "L-user_id",
+      "20": "U-user_id",
+      "0": "O"
+    },
+    "tags_to_ids": {
+      "B-category": 1,
+      "I-category": 2,
+      "L-category": 3,
+      "U-category": 4,
+      "B-difficulty": 5,
+      "I-difficulty": 6,
+      "L-difficulty": 7,
+      "U-difficulty": 8,
+      "B-ingredient": 9,
+      "I-ingredient": 10,
+      "L-ingredient": 11,
+      "U-ingredient": 12,
+      "B-time": 13,
+      "I-time": 14,
+      "L-time": 15,
+      "U-time": 16,
+      "B-user_id": 17,
+      "I-user_id": 18,
+      "L-user_id": 19,
+      "U-user_id": 20,
+      "O": 0
+    },
+    "num_tags": 21
+  }
+]

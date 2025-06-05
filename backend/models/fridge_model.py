@@ -1,0 +1,1 @@
+# fridge_model.py : 재료 저장/삭제

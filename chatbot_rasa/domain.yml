@@ -1,0 +1,77 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - recommend_menu
+  - recommend_from_fridge
+  - shopping_suggestion
+  - inform_user_id
+  - inform
+
+entities:
+  - ingredient
+  - user_id
+  - category
+
+slots:
+  ingredient:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: ingredient
+  user_id:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: user_id
+  category:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: category
+  difficulty:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: difficulty
+
+  time:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: time
+
+responses:
+  utter_greet:
+    - text: "안녕하세요! 무엇을 도와드릴까요?"
+    - text: "안녕하세요!"
+
+  utter_goodbye:
+    - text: "안녕히 가세요!"
+    - text: "잘 가요!"
+
+  utter_recommend_menu:
+    - text: "이거 어때요?"
+
+  utter_ask_ingredient:
+    - text: "어떤 재료가 들어간 요리를 찾고 계신가요?"
+
+  utter_ask_recommend_from_fridge:
+    - text: "냉장고에 있는 재료로 만들 수 있는 레시피를 추천해 드리겠습니다."
+
+  utter_ask_shopping_suggestion:
+    - text: "냉장고에 재료가 모자랄 때 어떤 걸 사야 할지 알려드릴게요."
+
+  utter_ask_user_id:
+    - text: "user_id를 알려주세요."
+
+  utter_ask_category:
+    - text: "추천받고 싶은 카테고리를 알려주세요. 예: 다이어트, 한식, 양식 등"
+
+actions:
+  - action_recommend_menu
+  - action_recommend_from_fridge
+  - action_shopping_suggestion
+  - action_store_user_id

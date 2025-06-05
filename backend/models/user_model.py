@@ -1,0 +1,1 @@
+# user_model.py : 사용자 추가/조회 (id/email 중복 확인 등)

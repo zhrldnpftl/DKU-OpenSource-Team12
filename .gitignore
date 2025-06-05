@@ -35,3 +35,17 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+
+# 가상환경
+rasaenv/
+
+# .pyc 파일 무시 설정
+__pycache__/
+*.pyc
+
+# rasa
+rasaenv/
+rasa310env/
+__pycache__/
+*.pyc

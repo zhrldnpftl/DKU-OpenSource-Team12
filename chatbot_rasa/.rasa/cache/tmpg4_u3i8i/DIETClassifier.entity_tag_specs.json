@@ -1,0 +1,36 @@
+[
+  {
+    "tag_name": "entity",
+    "ids_to_tags": {
+      "1": "B-category",
+      "2": "I-category",
+      "3": "L-category",
+      "4": "U-category",
+      "5": "B-ingredient",
+      "6": "I-ingredient",
+      "7": "L-ingredient",
+      "8": "U-ingredient",
+      "9": "B-user_id",
+      "10": "I-user_id",
+      "11": "L-user_id",
+      "12": "U-user_id",
+      "0": "O"
+    },
+    "tags_to_ids": {
+      "B-category": 1,
+      "I-category": 2,
+      "L-category": 3,
+      "U-category": 4,
+      "B-ingredient": 5,
+      "I-ingredient": 6,
+      "L-ingredient": 7,
+      "U-ingredient": 8,
+      "B-user_id": 9,
+      "I-user_id": 10,
+      "L-user_id": 11,
+      "U-user_id": 12,
+      "O": 0
+    },
+    "num_tags": 13
+  }
+]
