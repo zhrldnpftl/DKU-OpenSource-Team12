@@ -1,0 +1,104 @@
+version: "3.1"
+
+stories:
+
+# 👋 인사
+- story: 인사
+  steps:
+  - intent: greet
+  - action: utter_greet
+
+# 👋 인사 후 작별
+- story: 인사 후 작별
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: goodbye
+  - action: utter_goodbye
+
+# 🪪 사용자 ID 등록 흐름
+- story: user_id 등록
+  steps:
+  - intent: inform_user_id
+  - action: action_store_user_id
+  - slot_was_set:
+      - user_id
+  - action: utter_ask_ingredient
+
+# 🍽️ 메뉴 추천: 카테고리만 있을 때
+- story: 메뉴 추천 (카테고리만 있음)
+  steps:
+  - intent: recommend_menu
+  - slot_was_set:
+      - category: 다이어트
+  - slot_was_set:
+      - ingredient: null
+  - action: action_recommend_menu
+
+# 🍽️ 메뉴 추천: 재료만 있을 때
+- story: 메뉴 추천 (재료만 있음)
+  steps:
+  - intent: recommend_menu
+  - slot_was_set:
+      - category: null
+  - slot_was_set:
+      - ingredient: 감자
+  - action: action_recommend_menu
+
+# 🍽️ 메뉴 추천: 재료와 카테고리 모두 있을 때
+- story: 메뉴 추천 (카테고리 + 재료)
+  steps:
+  - intent: recommend_menu
+  - slot_was_set:
+      - category: 다이어트
+  - slot_was_set:
+      - ingredient: 감자
+  - action: action_recommend_menu
+
+# 🍽️ 메뉴 추천: 카테고리도 재료도 없을 때
+- story: 메뉴 추천 (슬롯 없음)
+  steps:
+  - intent: recommend_menu
+  - slot_was_set:
+      - category: null
+  - slot_was_set:
+      - ingredient: null
+  - action: action_recommend_menu
+
+# 🧊 냉장고 재료 기반 추천
+- story: 냉장고 추천
+  steps:
+  - intent: recommend_from_fridge
+  - action: action_recommend_from_fridge
+
+# 🛒 장보기 제안
+- story: 장보기 제안
+  steps:
+  - intent: shopping_suggestion
+  - action: action_shopping_suggestion
+
+# 🔁 추천 메뉴 이어가기 (카테고리만)
+- story: 카테고리 inform
+  steps:
+  - intent: inform
+  - slot_was_set:
+      - category: 다이어트
+  - action: action_recommend_menu
+
+# 🔁 추천 메뉴 이어가기 (재료만)
+- story: 재료 inform
+  steps:
+  - intent: inform
+  - slot_was_set:
+      - ingredient: 감자
+  - action: action_recommend_menu
+
+# 🔁 추천 메뉴 이어가기 (카테고리 + 재료)
+- story: 카테고리와 재료 inform
+  steps:
+  - intent: inform
+  - slot_was_set:
+      - category: 다이어트
+  - slot_was_set:
+      - ingredient: 감자
+  - action: action_recommend_menu

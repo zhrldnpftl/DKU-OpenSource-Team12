@@ -1,0 +1,23 @@
+version: "3.1"
+
+rules:
+
+- rule: 인사
+  steps:
+  - intent: greet
+  - action: utter_greet
+
+- rule: 작별 인사
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: 냉장고 재료로 레시피 추천 요청
+  steps:
+  - intent: recommend_from_fridge
+  - action: action_recommend_from_fridge
+
+- rule: 재료 부족 시 장보기 추천 요청
+  steps:
+  - intent: shopping_suggestion
+  - action: action_shopping_suggestion

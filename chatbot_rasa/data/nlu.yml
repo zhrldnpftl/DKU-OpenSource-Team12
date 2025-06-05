@@ -1,0 +1,136 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - 안녕
+    - 안녕하세요
+    - 하이
+    - 좋은 아침
+
+- intent: goodbye
+  examples: |
+    - 안녕히 계세요
+    - 잘 가요
+    - 바이
+
+- intent: recommend_menu
+  examples: |
+    - 점심 뭐 먹지?
+    - 오늘 저녁 뭐야
+    - 메뉴 추천해줘
+    - 뭐 먹을까?
+    - [감자](ingredient) 요리 뭐 있어?
+    - [계란](ingredient)으로 만들 수 있는 요리 알려줘
+    - [두부](ingredient) 요리 추천해줘
+    - [닭고기](ingredient) 들어간 요리 있어?
+    - [김치](ingredient) 요리 뭐 있을까?
+    - [감자](ingredient) 요리 뭐 있어?
+    - [두부](ingredient) 요리 추천해줘
+    - [다이어트](category) 요리 추천해줘
+    - [돼지고기](ingredient) 들어간 [다이어트](category) 요리 알려줘
+    - [다이어트](category) 레시피 추천해줘
+    - [비건](category) 메뉴 추천해줘
+    - [한식](category) 요리 알려줘
+    - [양식](category) 메뉴 뭐 있어?
+    - [중식](category) 요리 추천
+    - [일식](category) 레시피 알려줘
+    - [간편식](category) 뭐 있을까?
+    - [건강식](category) 추천해줘
+    - [매운](category) 음식 뭐 있어?
+    - [달콤한](category) 요리 추천
+    - [저칼로리](category) 메뉴 알려줘
+    - [중급](difficulty) 난이도 요리 추천해줘
+    - [초보](difficulty)용 레시피 알려줘
+    - [10분](time) 요리 뭐 있어?
+    - [30분 이상](time) 걸리는 요리 추천해줘
+
+- lookup: ingredient
+  examples: |
+    - 감자
+    - 계란
+    - 두부
+    - 닭고기
+    - 김치
+    - 양파
+    - 고구마
+    - 당근
+    - 소고기
+    - 돼지고기
+    - 브로콜리
+    - 버섯
+
+- lookup: category
+  examples: |
+    - 다이어트
+    - 한식
+    - 양식
+    - 중식
+    - 일식
+    - 비건
+    - 간편식
+    - 건강식
+    - 매운
+    - 달콤한
+    - 저칼로리
+
+- intent: recommend_from_fridge
+  examples: |
+    - 냉장고 재료로 요리 추천해줘
+    - 냉장고에 있는 재료로 레시피 알려줘
+    - 냉장고 속 재료로 만들 수 있는 요리 뭐야
+    - 내 냉장고 재료로 만들 수 있는 맛있는 요리 찾아줘
+
+- intent: shopping_suggestion
+  examples: |
+    - 재료가 부족하면 뭐 사야 해?
+    - 냉장고 재료가 모자랄 때 장보기 추천해줘
+    - 지금 뭐 사러 가야 하지?
+    - 어떤 재료를 추가로 사야 할까?
+
+- intent: inform_user_id
+  examples: |
+    - 내 아이디는 [jm](user_id)야
+    - 내 아이디는 [user123](user_id)
+    - user_id는 [jm](user_id)
+    - 나는 [jm](user_id) 입니다
+
+- intent: inform
+  examples: |
+    - [다이어트](category)
+    - [한식](category)
+    - [양식](category)
+    - [중식](category)
+    - [일식](category)
+    - [비건](category)
+    - [간편식](category)
+    - [건강식](category)
+    - [매운](category)
+    - [달콤한](category)
+    - [저칼로리](category)
+    - 추천해주세요
+    - [감자](ingredient)
+    - [계란](ingredient)
+    - [두부](ingredient)
+    - [닭고기](ingredient)
+    - [김치](ingredient)
+    - [중급](difficulty)
+    - [10분](time)
+    - [30분 이상](time)
+
+
+- lookup: difficulty
+  examples: |
+    - 초보
+    - 중급
+    - 고급
+
+
+- lookup: time
+  examples: |
+    - 10분
+    - 20분
+    - 30분
+    - 30분 이상
+    - 1시간
+
