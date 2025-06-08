@@ -4,16 +4,16 @@
     "slug": "bytebite-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/fridge-bot-icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-<<<<<<< HEAD
-    // [0519 추가] pc web 환경설정
-    "platforms": ["ios", "android", "web"],
-=======
->>>>>>> b5cbc3f6b536ea898e1a51e6bfcc1b9cefb7b0f9
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/fridge-bot-splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/fridge-bot-adaptive.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true
